@@ -18,3 +18,6 @@ administration page.
 Task 3: Performance Comparison. In this task, we will quantify the performance differences between public and symmetric key algorithms.
 Fortunately, OpenSSL provides a simple interface for doing so. => _Openssl speed RSA_ && => _Openssl speed AES_
 can perform and measure their respective public and symmetric key operations using different parameters.
+
+
+HELPFUL ARTICLE to detail what exactly we're trying to pull off => https://resources.infosecinstitute.com/topic/cbc-byte-flipping-attack-101-approach/
