@@ -1,8 +1,8 @@
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
+
 def main():
-   literally_anything = input("What is my name??: ")
-   print("Hello World!",end=', ') 
-   print(f"My name is {literally_anything} and I am a computer")
+    #Ex// cipher = AES.new([key], [mode])
 
 if __name__ == "__main__":
     main()
-    
