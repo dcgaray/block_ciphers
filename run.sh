@@ -15,6 +15,13 @@ then
     echo "~~~Results sent out to $1.out~~~"
 fi
 
+# ./runsh [BMP_FILE] [OUTPUT_FILE]
+if [ $# -eq 2 ] 
+then
+    python3 main.py $1 > $2.out
+    echo "~~~Results sent out to $2.out~~~"
+fi
+
 echo "~~~Finished running!~~~"
 
 
