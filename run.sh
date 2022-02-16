@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 echo "~~~Running python encryption files~~~"
 #if no args supplied, it'll just run the code
 if [ $# -eq 0 ] 
