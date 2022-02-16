@@ -4,16 +4,11 @@ from PIL import Image
 import sys
 
 
-def main():
+def CBC(infile):
     #Ex// cipher = AES.new([key], [mode])
     try:
-        inputF = sys.argv[1] 
-        print(f"Alright, i was given [{inputF}], time to encrypt it with AES-CBC")
-    except: 
-        print(f"Usage: main.py [filename].bmp")
-        return
-    try:
-        im = Image.open(inputF, mode="r")
+        print(f"Alright, i was given [{infile}], time to encrypt it with AES-CBC")
+        im = Image.open(infile, mode="r")
     except:
         print(f"That is not a valid file.")
         return 

@@ -3,20 +3,14 @@ from Crypto.Random import get_random_bytes
 from PIL import Image
 import sys
 
-def main():
-    #Ex// cipher = AES.new([key], [mode])
+
+def EBC(infile):
     try:
-        inputF = sys.argv[1] 
-        print(f"Alright, i was given [{inputF}], time to encrypt it with AES-EBC")
-    except: 
-        print(f"Usage: main.py [filename].bmp")
-        return
-    try:
-        im = Image.open(inputF, mode="r")
+        print(f"Alright, i was given [{infile}], time to encrypt it with AES-EBC")
+        im = Image.open(infile, mode="r")
     except:
         print(f"That is not a valid file.")
         return 
-    #Code
 
     cipher_key = get_random_bytes(16)
     info = im.convert("RGB").tobytes()
