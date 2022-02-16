@@ -3,7 +3,6 @@ from Crypto.Random import get_random_bytes
 from PIL import Image
 import sys
 
-block_length = 16
 
 def main():
     #Ex// cipher = AES.new([key], [mode])
@@ -23,7 +22,8 @@ def main():
     cipher_key = get_random_bytes(16)
     info = im.convert("RGB").tobytes()
     ogLen = len(info) # we must save the original length of information
-    paddedInfo = pad(info)
+    blockLen = 16
+    paddedInfo = pad(info,blockLen)
     encryptedInfo = aesCbcEncryption(cipher_key, paddedInfo)
     newImage = to_RGB(encryptedInfo[:ogLen])
     im2 = Image.new(im.mode, im.size) #create an image that is the same specs as the original image
@@ -33,7 +33,7 @@ def main():
 # PKCS #7 specisies that the value of each added byte is the number of bytes that are added.
 # AES has a fixed data block size of 16 bits. If our information is divisible by 16 bytes, then 
 # we will add an extra block of bytes for padding
-def pad(information):
+def pad(information,block_length):
     info_len = len(information)
     pad = b"\x00" * (block_length - (info_len%16))
     return (information + pad)
