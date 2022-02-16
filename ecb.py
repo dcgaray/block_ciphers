@@ -9,7 +9,7 @@ def main():
     #Ex// cipher = AES.new([key], [mode])
     try:
         inputF = sys.argv[1] 
-        print(f"Alright, i was given [{inputF}], time to make magic happen")
+        print(f"Alright, i was given [{inputF}], time to encrypt it with AES-EBC")
     except: 
         print(f"Usage: main.py [filename].bmp")
         return
@@ -19,7 +19,6 @@ def main():
         print(f"That is not a valid file.")
         return 
     #Code
-    print(f"{im.info}\n{im.format}")
 
     cipher_key = get_random_bytes(16)
     info = im.convert("RGB").tobytes()
@@ -29,7 +28,7 @@ def main():
     newImage = to_RGB(encryptedInfo[:ogLen])
     im2 = Image.new(im.mode, im.size) #create an image that is the same specs as the original image
     im2.putdata(newImage)
-    im2.save("ECBresult"+".BMP", "BMP")
+    im2.save("ECBresult.BMP", "BMP")
 
 
 # PKCS #7 specisies that the value of each added byte is the number of bytes that are added.
