@@ -3,11 +3,13 @@ from Crypto.Random import get_random_bytes
 from PIL import Image
 import sys
 
+block_length = 16
 
 def main():
     #Ex// cipher = AES.new([key], [mode])
     try:
         inputF = sys.argv[1] 
+        print(f"Alright, i was given [{inputF}], time to make magic happen")
     except: 
         print(f"Usage: main.py [filename].bmp")
         return
@@ -16,10 +18,43 @@ def main():
     except:
         print(f"That is not a valid file.")
         return 
+    #Code
+    print(f"{im.info}\n{im.format}")
 
-    print(im.info)
+    cipher_key = get_random_bytes(16)
+    info = im.convert("RGB").tobytes()
+    ogLen = len(info)
+    paddedInfo = pad(info)
+    encryptedInfo = aesEcbEncryption(cipher_key, paddedInfo)
+    newImage = to_RGB(encryptedInfo[:ogLen])
+    im2 = Image.new(im.mode, im.size)
+    im2.putdata(newImage)
+    im2.save("test"+".BMP", "BMP")
 
 
+
+# PKCS #7 specisies that the value of each added byte is the number of bytes that are added.
+# AES has a fixed data block size of 16 bits. If our information is divisible by 16 bytes, then 
+# we will add an extra block of bytes for padding
+def pad(information):
+    info_len = len(information)
+    pad = b"\x00" * (block_length - (info_len%16))
+    return (information + pad)
+
+#maps the orignal image to RGB information
+def to_RGB(information):
+    r, g, b = tuple(
+        map(
+            lambda d: 
+            [information[i] for i in range(0,len(information)) if i % 3 == d], [0,1,2])
+        )
+    pixels = tuple(zip(r,g,b))
+    return pixels
+
+def aesEcbEncryption(key, information, mode=AES.MODE_ECB):
+    aes = AES.new(key,mode)
+    new_info = aes.encrypt(information)
+    return new_info
 
 if __name__ == "__main__":
     main()
