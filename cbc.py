@@ -1,8 +1,7 @@
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
-def CBC(info):
-    cipher_key = get_random_bytes(16)
+def CBC(info,cipher_key=get_random_bytes(16)):
     ogLen = len(info) # we must save the original length of information
     blockLen = 16
     paddedInfo = pad(info,blockLen)
