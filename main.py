@@ -6,8 +6,9 @@ from ecb import ECB
 from confid import condifidentialityLimits
 
 def main():
-    infile = sys.argv[1]
-    task1(infile) 
+    if len(sys.argv) >= 2:
+        infile = sys.argv[1]
+        task1(infile) 
     task2()
 
 def task1(infile):

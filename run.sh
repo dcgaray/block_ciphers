@@ -4,7 +4,9 @@ echo "~~~Running python encryption files~~~"
 #if no args supplied, it'll just run the code
 if [ $# -eq 0 ] 
     then
-       echo "Usage: ./run.sh [filename].bmp"
+
+       echo "Usage for encryption: ./run.sh [filename].bmp"
+       python3 main.py
        
 fi
 #if given an output file name, the code will run and create a result file

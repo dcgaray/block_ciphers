@@ -7,8 +7,9 @@ cipher_key = get_random_bytes(16)
 def condifidentialityLimits():
     block_length = 16 
     inputStr = input("Username: ")
-    submit(inputStr)
+    paddedStr = submit(inputStr)
     #TODO : FINISH THIS
+    print(paddedStr)
 
 
 
@@ -17,6 +18,7 @@ def submit(username):
     prependStr="userid=456;userdata="
     appendStr=";session-id=31337"
     information = prependStr + username + appendStr
+    return information
 
 # PKCS #7 specisies that the value of each added byte is the number of bytes that are added.
 # AES has a fixed data block size of 16 bits. If our information is divisible by 16 bytes, then 
