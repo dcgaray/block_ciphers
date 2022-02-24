@@ -12,9 +12,13 @@ def condifidentialityLimits():
     intial_cipher_key = get_random_bytes(16)
     inputQuery = input("Username: ")
     encodedQuery = submit(inputQuery, intial_cipher_key, intial_iv)
-    print(encodedQuery)
+    #print(encodedQuery)
     isAdmin =verify(encodedQuery, intial_cipher_key, intial_iv)
-    print(isAdmin)
+    print(f"Non-Byte Flipped result: {isAdmin}")
+    #alright, now time to preform a byte flipping attack
+    byteFlipped = byteFlipAttack(4, 4, encodedQuery)
+    #isAdmin = verify(byteFlipped, intial_cipher_key, intial_iv)
+    #print(f"Byte Flipped result: {isAdmin}")
 
 
 # str -> URL encoded and AES-128-CBC encrypted string
@@ -42,3 +46,22 @@ def verify(encodedQuery, c_key, ivec):
     #HINT: since all ";" & "=" are URL encoded, they don't show up, theoritcally impossible to make this function return true
     res = ";admin=true;" in  plaintext
     return res
+
+
+def byteFlipAttack(blockIdx, bit, encodedQuery):
+    #bFlippedQuery = encodedQuery
+    block1 = list(encodedQuery) 
+    for x in block1:
+        print(type (x))
+    print(block1)
+    flippedBit = chr(block1[blockIdx]^bit)
+    block1[blockIdx] = ord(flippedBit)
+    print(block1)
+    print(encodedQuery)
+    for x in block1:
+        print(type (x))
+    print("".join(block1))
+
+
+
+
