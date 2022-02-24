@@ -2,6 +2,7 @@ import urllib.parse #god bless the Python gods for having a built-in function fo
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from cbc import CBC
+from base64 import b64decode
 
 
 
@@ -12,13 +13,15 @@ def condifidentialityLimits():
     intial_cipher_key = get_random_bytes(16)
     inputQuery = input("Username: ")
     encodedQuery = submit(inputQuery, intial_cipher_key, intial_iv)
-    #print(encodedQuery)
-    isAdmin =verify(encodedQuery, intial_cipher_key, intial_iv)
+    isAdmin = verify(encodedQuery, intial_cipher_key, intial_iv)
     print(f"Non-Byte Flipped result: {isAdmin}")
+    print(encodedQuery)
     #alright, now time to preform a byte flipping attack
-    byteFlipped = byteFlipAttack(4, 4, encodedQuery)
-    #isAdmin = verify(byteFlipped, intial_cipher_key, intial_iv)
-    #print(f"Byte Flipped result: {isAdmin}")
+    flippedQuery = byteFlipAttack(4,4, encodedQuery)
+    print(flippedQuery)
+    test = verify(flippedQuery, intial_cipher_key, intial_iv)
+    print(test)
+
 
 
 # str -> URL encoded and AES-128-CBC encrypted string
@@ -49,19 +52,12 @@ def verify(encodedQuery, c_key, ivec):
 
 
 def byteFlipAttack(blockIdx, bit, encodedQuery):
-    #bFlippedQuery = encodedQuery
-    block1 = list(encodedQuery) 
-    for x in block1:
-        print(type (x))
-    print(block1)
-    flippedBit = chr(block1[blockIdx]^bit)
-    block1[blockIdx] = ord(flippedBit)
-    print(block1)
-    print(encodedQuery)
-    for x in block1:
-        print(type (x))
-    print("".join(block1))
+    bytesArr = []
+    for num in encodedQuery:
+        temp = num.to_bytes(1, byteorder="big")
+        bytesArr.append(temp)
 
-
+    bStr = b"".join(bytesArr)
+    return bStr
 
 
