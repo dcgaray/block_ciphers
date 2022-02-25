@@ -27,7 +27,8 @@ def submit(query,cipher_key,iv):
     # %3B is the URL encoding of ";"
     # %3D is the URL encoding of "="
     # OKAY, WHEN PRINTING IT DOESN'T LOOK ANY DIFFERNT BUT IT"S BEEN URL-ENCODED = source;trust_me
-    urlEncodedQuery = urllib.parse.quote(query)  
+    encodedQuery = urllib.parse.quote(query)  
+    urlEncodedQuery = prependStr + encodedQuery + appendStr
     #our CBC function expects our answer to be in bytes
     bytesQuery = bytes(urlEncodedQuery, 'UTF-8')
     #our CBC function naturally uses a PKCS #7 padding
