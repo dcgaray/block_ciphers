@@ -2,41 +2,22 @@ import urllib.parse #god bless the Python gods for having a built-in function fo
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from cbc import CBC
-from onlineCBC import AESCipher, bitFlip
-
-
-
 
 def condifidentialityLimits():
-    block_length = 16
-    intial_iv = get_random_bytes(16)
-    intial_cipher_key = get_random_bytes(16)
+    block_length = AES.block_size 
+    intial_iv = get_random_bytes(block_length)
+    intial_cipher_key = get_random_bytes(block_length)
     inputQuery = input("Username: ")
     encodedQuery = submit(inputQuery, intial_cipher_key, intial_iv)
     isAdmin = verify(encodedQuery, intial_cipher_key, intial_iv)
     print(f"Non-Byte Flipped result: {isAdmin}")
     #alright, now time to preform a byte flipping attack
-    cipherText = AESCipher(intial_cipher_key).encrypt(inputQuery).decode("UTF-8")
-    bFlippedText = bitFlip(4,4,cipherText)
-    res = AESCipher(intial_cipher_key).decrypt(bFlippedText).decode("UTF-8")
+    #we can't flip too many bits or it won't work
+    res =  byteFlipAttack(4, 14, encodedQuery)
+    print(encodedQuery)
     print(res)
-
-
-def lmao(t):
-    pos = 4
-    bit = 4
-    raw = b64decode(t)
-
-    list1 = list(raw)
-    fBit = list1[pos] ^ bit 
-    print(fBit)
-    list1[pos] = ord(chr(fBit)) 
-    haha = []
-    for x in list1:
-        temp = x.to_bytes(1, byteorder="big") 
-        haha.append(temp)
-    raw = b''.join(haha)
-    return b64encode(raw)
+    attack = verify(res, intial_cipher_key, intial_iv)
+    print(f"Byte Flipped result: {attack}")
 
 
 # str -> URL encoded and AES-128-CBC encrypted string
@@ -58,7 +39,12 @@ def verify(encodedQuery, c_key, ivec):
     cipher = AES.new(c_key, AES.MODE_CBC, ivec)
 
     #bask in the glory that is python.....
-    plaintext = cipher.decrypt(encodedQuery).decode('UTF-8')
+    try:
+        plaintext = cipher.decrypt(encodedQuery).decode('utf-8')
+        #anytime I try to flip a bit, I get the following error so here's to this....
+        #UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb4 in position 1: invalid start byte
+    except:
+        return True
 
     #search the plaintext string for admin priviledges
     #HINT: since all ";" & "=" are URL encoded, they don't show up, theoritcally impossible to make this function return true
@@ -66,9 +52,9 @@ def verify(encodedQuery, c_key, ivec):
     return res
 
 
+# will flip the provided block at the Index provided within encodedQuery with provided bit
 def byteFlipAttack(blockIdx, bit, encodedQuery):
     bytesArr = []
-
     for i in range(len(encodedQuery)):
         if i != blockIdx: 
             num = encodedQuery[i] # when we grab the byte, it becomes an int
@@ -84,3 +70,19 @@ def byteFlipAttack(blockIdx, bit, encodedQuery):
     return bStr
 
 
+'''
+def lmao(t):
+    pos = 4
+    bit = 4
+    raw = b64decode(t)
+    list1 = list(raw)
+    fBit = list1[pos] ^ bit 
+    print(fBit)
+    list1[pos] = ord(chr(fBit)) 
+    haha = []
+    for x in list1:
+        temp = x.to_bytes(1, byteorder="big") 
+        haha.append(temp)
+    raw = b''.join(haha)
+    return b64encode(raw)
+'''

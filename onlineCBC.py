@@ -27,19 +27,19 @@ class AESCipher:
     
 def bitFlip( pos, bit, data):
     raw = b64decode(data)
-
     list1 = list(raw)
-    list1[pos] = chr(ord(list1[pos])^bit)
-    raw = ''.join(list1)
-    return b64encode(raw)
+
+    fBit = list1[pos] ^ bit
+    list1[pos] = chr(fBit)
+    list2 = [str(x) for x in list1]
+    temp = ''.join(list2)
+    raw = temp.encode('utf-8')
+
+    return b64encode(pad(raw, AES.block_size))
 
 
 if __name__ == '__main__':
 
-    key = b'Sixteen byte key'
-    msg = "Buy 1000 lots of waffles"
-    
-    print('Original Message:', msg)
 
     ctx = AESCipher(key).encrypt(msg).decode('utf-8')
     print(type(ctx))
