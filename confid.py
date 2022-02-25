@@ -17,7 +17,7 @@ def condifidentialityLimits():
     print(f"Non-Byte Flipped result: {isAdmin}")
     print(encodedQuery)
     #alright, now time to preform a byte flipping attack
-    flippedQuery = byteFlipAttack(4,4, encodedQuery)
+    flippedQuery = byteFlipAttack(10,7, encodedQuery)
     print(flippedQuery)
     test = verify(flippedQuery, intial_cipher_key, intial_iv)
     print(test)
@@ -44,6 +44,7 @@ def verify(encodedQuery, c_key, ivec):
 
     #bask in the glory that is python.....
     plaintext = cipher.decrypt(encodedQuery).decode('UTF-8')
+    print(plaintext)
 
     #search the plaintext string for admin priviledges
     #HINT: since all ";" & "=" are URL encoded, they don't show up, theoritcally impossible to make this function return true
@@ -53,9 +54,19 @@ def verify(encodedQuery, c_key, ivec):
 
 def byteFlipAttack(blockIdx, bit, encodedQuery):
     bytesArr = []
-    for num in encodedQuery:
+
+    for i in range(len(encodedQuery)):
+        if i != blockIdx: 
+            num = encodedQuery[i] # when we grab the byte, it becomes an int
+        else:
+            b = encodedQuery[i]
+            print(type(b))
+            flippedBit = (encodedQuery[i]) ^ bit
+            num = flippedBit 
+        #<int>.to_bytes(length of byte, byteorder)
         temp = num.to_bytes(1, byteorder="big")
         bytesArr.append(temp)
+
 
     bStr = b"".join(bytesArr)
     return bStr
