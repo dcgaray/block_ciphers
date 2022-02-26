@@ -9,13 +9,10 @@ def condifidentialityLimits():
     intial_cipher_key = get_random_bytes(block_length)
     inputQuery = input("Username: ")
     encodedQuery = submit(inputQuery, intial_cipher_key, intial_iv)
-    isAdmin = verify(encodedQuery, intial_cipher_key, intial_iv)
-    print(f"Non-Byte Flipped result: {isAdmin}")
+    print(f"Non-Byte Flipped result: {verify(encodedQuery, intial_cipher_key, intial_iv)}")
     #alright, now time to preform a byte flipping attack
     #we can't flip too many bits or it won't work
     res =  byteFlipAttack(4, 14, encodedQuery)
-    print(encodedQuery)
-    print(res)
     attack = verify(res, intial_cipher_key, intial_iv)
     print(f"Byte Flipped result: {attack}")
 
@@ -24,30 +21,22 @@ def condifidentialityLimits():
 def submit(query,cipher_key,iv):
     prependStr = "userid=456;userdata="
     appendStr = ";session-id=31337"
-    # %3B is the URL encoding of ";"
-    # %3D is the URL encoding of "="
-    # OKAY, WHEN PRINTING IT DOESN'T LOOK ANY DIFFERNT BUT IT"S BEEN URL-ENCODED = source;trust_me
-    encodedQuery = urllib.parse.quote(query)  
+    # %3B is the URL encoding of ";" --- %3D is the URL encoding of "="
+    encodedQuery = urllib.parse.quote(query)  # OKAY, WHEN PRINTING IT DOESN'T LOOK ANY DIFFERNT BUT IT"S BEEN URL-ENCODED
     urlEncodedQuery = prependStr + encodedQuery + appendStr
     #our CBC function expects our answer to be in bytes
     bytesQuery = bytes(urlEncodedQuery, 'UTF-8')
-    #our CBC function naturally uses a PKCS #7 padding
     cbcEncodedQuery = CBC(bytesQuery, cipher_key, iv)
     return cbcEncodedQuery 
 
 def verify(encodedQuery, c_key, ivec):
-    #reuse our intial cipher_key an intialization vector
     cipher = AES.new(c_key, AES.MODE_CBC, ivec)
-
-    #bask in the glory that is python.....
-    try:
+    try: #bask in the glory that is python.....
         plaintext = cipher.decrypt(encodedQuery).decode('utf-8')
         #anytime I try to flip a bit, I get the following error so here's to this....
         #UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb4 in position 1: invalid start byte
     except:
         return True
-
-    #search the plaintext string for admin priviledges
     #HINT: since all ";" & "=" are URL encoded, they don't show up, theoritcally impossible to make this function return true
     res = ";admin=true;" in  plaintext
     return res
