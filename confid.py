@@ -41,7 +41,6 @@ def verify(encodedQuery, c_key, ivec):
     res = ";admin=true;" in  plaintext
     return res
 
-
 # will flip the provided block at the Index provided within encodedQuery with provided bit
 def byteFlipAttack(blockIdx, bit, encodedQuery):
     bytesArr = []
@@ -50,29 +49,10 @@ def byteFlipAttack(blockIdx, bit, encodedQuery):
             num = encodedQuery[i] # when we grab the byte, it becomes an int
         else:
             b = encodedQuery[i]
-            flippedBit = (encodedQuery[i]) ^ bit
+            flippedBit = (b ^ bit)
             num = flippedBit 
-        #<int>.to_bytes(length of byte, byteorder)
         temp = num.to_bytes(1, byteorder="big")
         bytesArr.append(temp)
 
     bStr = b"".join(bytesArr)
     return bStr
-
-
-'''
-def lmao(t):
-    pos = 4
-    bit = 4
-    raw = b64decode(t)
-    list1 = list(raw)
-    fBit = list1[pos] ^ bit 
-    print(fBit)
-    list1[pos] = ord(chr(fBit)) 
-    haha = []
-    for x in list1:
-        temp = x.to_bytes(1, byteorder="big") 
-        haha.append(temp)
-    raw = b''.join(haha)
-    return b64encode(raw)
-'''
