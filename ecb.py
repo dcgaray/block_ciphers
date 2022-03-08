@@ -1,8 +1,7 @@
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
-def ECB(info):
-    cipher_key = get_random_bytes(16)
+def ECB(info,cipher_key = get_random_bytes(16)):
     ogLen = len(info) # we must save the original length of information
     blockLen = 16
     paddedInfo = pad(info,blockLen)
@@ -27,5 +26,6 @@ def aesEcbEncryption(key, information, mode=AES.MODE_ECB):
     #yeah this is cool and all but you're not doing it yourself
     ## you gotta take all the blocks yourself and encode them.
     ### If this all works, then you should still be able to run your program like you currently do! 
+
     new_info = aes.encrypt(information)
     return new_info

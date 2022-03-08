@@ -35,7 +35,7 @@ def verify(encodedQuery, c_key, ivec):
         #Instead of using AES decrypt, us the "in" operator and then look for the "b'admin=true;'""
 
 
-    isAdmin = b"admin=true'"
+    isAdmin = b"admin=true;'"
     cipher = AES.new(c_key, AES.MODE_CBC, ivec)
     try: #bask in the glory that is python.....
         plaintext = cipher.decrypt(encodedQuery).decode('utf-8')

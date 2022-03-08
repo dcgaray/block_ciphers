@@ -1,4 +1,6 @@
 from PIL import Image
+from Crypto.Cipher import AES
+from Crypto.Random import get_random_bytes
 import sys
 
 from cbc import CBC
@@ -6,10 +8,25 @@ from ecb import ECB
 from confid import condifidentialityLimits
 
 def main():
+    block_length = AES.block_size 
+    cipher_key = get_random_bytes(16)    
+
+    inputQuery = input("message: ") 
+    #our ECB function expects our answer to be in bytes
+    bytesQuery = bytes(inputQuery, 'UTF-8')
+    ecbQuery = ECB(bytesQuery,cipher_key)
+    print(ecbQuery)
+    print(type(ecbQuery))
+    cipher = AES.new(cipher_key, AES.MODE_ECB)
+    plaintext = cipher.decrypt(ecbQuery).decode('utf-8')
+    print(plaintext)
+
+    ''' 
     if len(sys.argv) >= 2:
         infile = sys.argv[1]
         task1(infile) 
     task2()
+    '''
 
 def task1(infile):
     #Task1
