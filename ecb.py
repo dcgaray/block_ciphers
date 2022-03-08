@@ -18,14 +18,21 @@ def pad(information,block_length):
     pad = b"\x00" * (block_length - (info_len%block_length))
     return (information + pad)
 
+
+#takes in two bytes strings and XORs all the bits together
+def byte_xor(ba1, ba2):
+    return bytes([_a ^ _b for _a, _b in zip(ba1, ba2)])
+
+
+
 #takes a cipher key, and information to encrypt with ECB using AES
 #NOTE: the information being passed in must be padded
 def aesEcbEncryption(key, information, mode=AES.MODE_ECB):
     aes = AES.new(key,mode)
 
-    #yeah this is cool and all but you're not doing it yourself
-    ## you gotta take all the blocks yourself and encode them.
-    ### If this all works, then you should still be able to run your program like you currently do! 
+    numBlocks = len(information) / 16   #should always have a remainder of 0
+    #new_info = b"" * len(information)
+    new_info = byte_xor(information, key)
 
     new_info = aes.encrypt(information)
     return new_info
