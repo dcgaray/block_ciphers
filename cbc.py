@@ -23,5 +23,11 @@ def pad(information,block_length):
 #NOTE: the information being passed in must be padded
 def aesCbcEncryption(key, information, iv, mode=AES.MODE_CBC):
     aes = AES.new(key,mode,iv)
+
+
+    #take stevens advice and do this yourself, using every resulting ciphertext to XOR the next
+    ####Yeah this is cool, but like you're not doing it yourself
+
+
     new_info = aes.encrypt(information)
     return new_info
