@@ -1,9 +1,10 @@
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
+blockLen = 16
+
 def ECB(info,cipher_key = get_random_bytes(16)):
     ogLen = len(info) # we must save the original length of information
-    blockLen = 16
     paddedInfo = pad(info,blockLen)
     encryptedInfo = aesEcbEncryption(cipher_key, paddedInfo)
     return encryptedInfo
@@ -23,16 +24,16 @@ def pad(information,block_length):
 def byte_xor(ba1, ba2):
     return bytes([_a ^ _b for _a, _b in zip(ba1, ba2)])
 
-
-
 #takes a cipher key, and information to encrypt with ECB using AES
 #NOTE: the information being passed in must be padded
 def aesEcbEncryption(key, information, mode=AES.MODE_ECB):
     aes = AES.new(key,mode)
+    new_info = b""
 
-    numBlocks = len(information) / 16   #should always have a remainder of 0
-    #new_info = b"" * len(information)
-    new_info = byte_xor(information, key)
+    for i in range(0,len(information), blockLen):
+        blk = information[i:i+blockLen] 
+        encBlk = aes.encrypt(blk)
+        new_info += encBlk 
 
-    new_info = aes.encrypt(information)
+    #new_info = aes.encrypt(information)
     return new_info
