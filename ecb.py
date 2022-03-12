@@ -20,9 +20,6 @@ def pad(information,block_length):
     return (information + pad)
 
 
-#takes in two bytes strings and XORs all the bits together
-def byte_xor(ba1, ba2):
-    return bytes([_a ^ _b for _a, _b in zip(ba1, ba2)])
 
 #takes a cipher key, and information to encrypt with ECB using AES
 #NOTE: the information being passed in must be padded

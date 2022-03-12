@@ -1,5 +1,6 @@
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
+from Crypto.Util.strxor import strxor
 
 blockLen = 16
 
@@ -28,16 +29,24 @@ def byte_xor(ba1, ba2):
 #takes a cipher key, and information to encrypt with ECB using AES
 #NOTE: the information being passed in must be padded
 def aesCbcEncryption(key, information, iv, mode=AES.MODE_CBC):
+    aes = AES.new(key,mode,iv)
+
+    #STEVEN VVV Below is the code I was trying to get working but couldn't.
+    ''' 
+    cipher = AES.new(key, mode) 
+    blkNum = len(information) // blockLen
+    IV = iv
     new_info = b""
-    encBlk = iv 
 
-    for i in range(0,len(information), blockLen):
-        aes = AES.new(key,mode,encBlk)
-        blk = information[i:i+blockLen] 
-        xorBlk = byte_xor(encBlk,blk)
-        encBlk = aes.encrypt(xorBlk)
-        new_info += encBlk 
-
+    for i in range(0, blkNum):
+        msg = information[i*blockLen: i*blockLen + 16]
+        xorMsg = strxor(IV, msg)
+        encMsg = cipher.encrypt(xorMsg)
+        new_info += encMsg
+        IV = encMsg
 
     #new_info = aes.encrypt(information)
+    '''
+    new_info = aes.encrypt(information)
+
     return new_info
