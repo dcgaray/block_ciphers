@@ -44,7 +44,7 @@ def verify(encodedQuery, c_key, ivec):
     except:
         return True
     #HINT: since all ";" & "=" are URL encoded, they don't show up, theoritcally impossible to make this function return true
-    res = ";admin=true;" in  plaintext
+    res = isAdmin in plaintext
     return res
 
 # will flip the provided block at the Index provided within encodedQuery with provided bit
